@@ -28,6 +28,7 @@ const db = {}
 db.Sequelize = Sequelize
 db.sequelize = sequelize
 
+db.users = require('./userModel')(sequelize, DataTypes)
 db.payments = require('./paymentModel.js')(sequelize, DataTypes)
 db.carts = require('./cartModel')(sequelize, DataTypes)
 

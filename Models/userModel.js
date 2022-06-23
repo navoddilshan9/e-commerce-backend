@@ -1,58 +1,55 @@
-const Sequelize = require('sequelize')
-
-const sequelize = require('../database')
-
-const User = sequelize.define('user', {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true,
-  },
-  userName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  FName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  MName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  LName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  Role: {
-    typeof: Sequelize.STRING,
-    allowNull: false,
-  },
-  Location: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  street: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  number: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  town: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-})
-
-module.exports = User
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('user', {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      allowNull: false,
+      primaryKey: true,
+    },
+    userName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    FName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    MName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    LName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    Role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    Location: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    street: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    number: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    town: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  })
+  return User
+}

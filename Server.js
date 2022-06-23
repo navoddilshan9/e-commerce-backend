@@ -18,10 +18,12 @@ app.use(function (req, res, next) {
   next()
 })
 
+const userRouter = require('./Routes/userRouter')
 const paymentRouter = require('./Routes/paymentRouter')
 const cartRouter = require('./Routes/cartRouter')
 
 //routes
+app.use('/api/v1/user', userRouter)
 app.use('/api/v1/payment', paymentRouter)
 app.use('/api/v1/cart', cartRouter)
 
