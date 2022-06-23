@@ -58,24 +58,57 @@ const login = async (req, res) => {
 
   await User.findOne({
     where: { email: email },
-    include: [
-      {
-        model: Role,
-      },
-    ],
-  }).then((user) => {
-    console.log(res)
+  }).then(async (user) => {
     if (user == null) {
       res.status(200).send('Cannot find user')
     } else {
-      res.status(200).json({
-        status: true,
+      if (await bcrypt.compare(password, user.password)) {
+        res.status(200).json({
+          status: true,
+          role: user.Role,
+        })
+      } else {
+        res.status(200).json({
+          status: false,
+        })
+      }
+    }
+  })
+}
 
-        // userId: user.uId,
-        // currency: user.currency,
-        // admin: user.role.admin,
-        // hotelAdmin: user.role.hotelAdmin,
-        // customer: user.role.customer,
+const register = async (req, res) => {
+  //bcrtpy password
+
+  const salt = await bcrypt.genSalt()
+  const hashedPassword = await bcrypt.hash(req.body.password, salt)
+
+  let info = {
+    userName: req.body.userName,
+    password: hashedPassword,
+    email: req.body.email,
+    FName: req.body.firstName,
+    MName: req.body.middleName,
+    LName: req.body.lastName,
+    Role: req.body.role,
+    Location: req.body.location,
+    street: req.body.street,
+    number: req.body.number,
+    town: req.body.town,
+  }
+  await User.findOne({
+    where: { email: req.body.email },
+  }).then(async (user) => {
+    if (user == null) {
+      await User.create(info).then((user) => {
+        res.status(200).json({
+          status: true,
+          meesage: 'new user added',
+        })
+      })
+    } else {
+      res.status(200).json({
+        status: false,
+        meesage: 'excisting user',
       })
     }
   })
@@ -86,4 +119,5 @@ module.exports = {
   updateUserById,
   deleteUserById,
   login,
+  register,
 }
