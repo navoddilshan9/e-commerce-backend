@@ -5,47 +5,57 @@ const User = db.users
 
 // Get all users
 const getAllUser = async (req, res) => {
-  let users = await User.findAll({
-    include: [
-      {
-        model: Role,
-      },
-    ],
-  })
-  res.status(200).send(users)
+  await User.findAll({})
+    .then((users) => {
+      res.status(200).send(users)
+    })
+    .catch((err) => {
+      res.status(400).send(err)
+    })
 }
 
 //Get user by ID
 const getUserById = async (req, res) => {
-  let id = req.body.id
-  let user = await User.findOne({
-    where: { uId: id },
-    include: [
-      {
-        model: Role,
-      },
-    ],
+  let id = req.params.id
+  await User.findOne({
+    where: { id: id },
   })
-  res.status(200).send(user)
+    .then((user) => {
+      res.status(200).send(user)
+    })
+    .catch((err) => {
+      res.status(400).send(err)
+    })
 }
 
 //  update user by ID
 
 const updateUserById = async (req, res) => {
   let id = req.params.id
-  const user = await User.update(req.body, { where: { uId: id } })
-  res.status(200).send(user)
+  await User.update(req.body, { where: { id: id } })
+    .then((user) => {
+      res.status(200).send(user)
+    })
+    .catch((err) => {
+      res.status(400).send(err)
+    })
 }
 
 //  Delete user by ID
 const deleteUserById = async (req, res) => {
   let id = req.params.id
-  const status = await User.destroy({ where: { uId: id } })
-    .then((data) => {
+  await User.destroy({ where: { id: id } })
+    .then((status) => {
       if (status != 0) {
-        res.status(200).send('Success')
+        res.status(200).json({
+          status: true,
+          message: 'success',
+        })
       } else {
-        res.status(200).send('Error')
+        res.status(200).json({
+          status: false,
+          message: 'Invalid user id',
+        })
       }
     })
     .catch((err) => {
@@ -60,7 +70,10 @@ const login = async (req, res) => {
     where: { email: email },
   }).then(async (user) => {
     if (user == null) {
-      res.status(200).send('Cannot find user')
+      res.status(200).json({
+        status: false,
+        message: 'Cannot find user',
+      })
     } else {
       if (await bcrypt.compare(password, user.password)) {
         res.status(200).json({
