@@ -90,8 +90,6 @@ const login = async (req, res) => {
 }
 
 const register = async (req, res) => {
-  //bcrtpy password
-
   const salt = await bcrypt.genSalt()
   const hashedPassword = await bcrypt.hash(req.body.password, salt)
 
