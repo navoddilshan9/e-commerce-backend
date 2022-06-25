@@ -6,9 +6,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       autoIncrement: true,
     },
-    storeId: {
-      type: DataTypes.INTEGER,
-    },
     name: {
       type: DataTypes.STRING,
     },
