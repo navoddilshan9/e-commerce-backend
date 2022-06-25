@@ -1,8 +1,69 @@
 const db = require('../models')
 const bcrypt = require('bcrypt')
-const cloudinary = require('../Middlewares/cloudinary')
 const User = db.users
-require('dotenv').config()
+const cloudinary = require('../Middlewares/cloudinary')
+const register = async (req, res) => {
+  const salt = await bcrypt.genSalt()
+  const hashedPassword = await bcrypt.hash(req.body.password, salt)
+  const path = req.file.path
+  let info = {
+    userName: req.body.userName,
+    password: hashedPassword,
+    email: req.body.email,
+    FName: req.body.firstName,
+    MName: req.body.middleName,
+    LName: req.body.lastName,
+    Role: req.body.role,
+    Location: req.body.location,
+    street: req.body.street,
+    number: req.body.number,
+    town: req.body.town,
+  }
+  await User.findOne({
+    where: { email: req.body.email },
+  }).then(async (user) => {
+    if (user == null) {
+      await User.create(info).then(async (user) => {
+        await cloudinary.uploader
+          .upload(path)
+          .then((result) => {
+            User.update(
+              { image: result.secure_url, cloudinary_id: result.public_id },
+              { where: { id: user.id } }
+            )
+              .then((response) => {
+                console.log(response)
+                if (response != 0) {
+                  res.status(200).json({
+                    status: true,
+                    meesage: 'new user added',
+                  })
+                } else {
+                  res.status(200).json({
+                    status: false,
+                    meesage: 'Cloudinary error',
+                  })
+                }
+              })
+              .catch((err) => {
+                res.status(200).json({
+                  status: false,
+                  meesage: 'Error',
+                })
+              })
+          })
+          .catch((err) => {
+            res.status(500).send(err)
+          })
+      })
+    } else {
+      res.status(200).json({
+        status: false,
+        meesage: 'excisting user',
+      })
+    }
+  })
+}
 // Get all users
 const getAllUser = async (req, res) => {
   await User.findAll({})
@@ -85,69 +146,6 @@ const login = async (req, res) => {
           status: false,
         })
       }
-    }
-  })
-}
-
-const register = async (req, res) => {
-  const salt = await bcrypt.genSalt()
-  const hashedPassword = await bcrypt.hash(req.body.password, salt)
-  const path = req.file.path
-  let info = {
-    userName: req.body.userName,
-    password: hashedPassword,
-    email: req.body.email,
-    FName: req.body.firstName,
-    MName: req.body.middleName,
-    LName: req.body.lastName,
-    Role: req.body.role,
-    Location: req.body.location,
-    street: req.body.street,
-    number: req.body.number,
-    town: req.body.town,
-  }
-  await User.findOne({
-    where: { email: req.body.email },
-  }).then(async (user) => {
-    if (user == null) {
-      await User.create(info).then(async (user) => {
-        await cloudinary.uploader
-          .upload(path)
-          .then((result) => {
-            User.update(
-              { image: result.secure_url, cloudinary_id: result.public_id },
-              { where: { id: user.id } }
-            )
-              .then((response) => {
-                console.log(response)
-                if (response != 0) {
-                  res.status(200).json({
-                    status: true,
-                    meesage: 'new user added',
-                  })
-                } else {
-                  res.status(200).json({
-                    status: false,
-                    meesage: 'Cloudinary error',
-                  })
-                }
-              })
-              .catch((err) => {
-                res.status(200).json({
-                  status: false,
-                  meesage: 'Error',
-                })
-              })
-          })
-          .catch((err) => {
-            res.status(500).send(err)
-          })
-      })
-    } else {
-      res.status(200).json({
-        status: false,
-        meesage: 'excisting user',
-      })
     }
   })
 }

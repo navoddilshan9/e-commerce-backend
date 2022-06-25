@@ -6,13 +6,15 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    picture: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     catergoryName: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    image: {
+      type: DataTypes.STRING,
+    },
+    cloudinary_id: {
+      type: DataTypes.STRING,
     },
   })
   return Category

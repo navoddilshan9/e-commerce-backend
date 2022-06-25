@@ -9,13 +9,15 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
     },
-    picture: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
     description: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    image: {
+      type: DataTypes.STRING,
+    },
+    cloudinary_id: {
+      type: DataTypes.STRING,
     },
   })
   return Store

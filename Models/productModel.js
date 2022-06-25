@@ -20,6 +20,12 @@ module.exports = (sequelize, DataTypes) => {
     stockQty: {
       type: DataTypes.INTEGER,
     },
+    image: {
+      type: DataTypes.STRING,
+    },
+    cloudinary_id: {
+      type: DataTypes.STRING,
+    },
   })
   return Product
 }
