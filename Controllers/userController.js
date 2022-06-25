@@ -1,8 +1,8 @@
 const db = require('../models')
 const bcrypt = require('bcrypt')
-
+const cloudinary = require('../Middlewares/cloudinary')
 const User = db.users
-
+require('dotenv').config()
 // Get all users
 const getAllUser = async (req, res) => {
   await User.findAll({})
@@ -92,7 +92,7 @@ const login = async (req, res) => {
 const register = async (req, res) => {
   const salt = await bcrypt.genSalt()
   const hashedPassword = await bcrypt.hash(req.body.password, salt)
-
+  const path = req.file.path
   let info = {
     userName: req.body.userName,
     password: hashedPassword,
@@ -110,11 +110,38 @@ const register = async (req, res) => {
     where: { email: req.body.email },
   }).then(async (user) => {
     if (user == null) {
-      await User.create(info).then((user) => {
-        res.status(200).json({
-          status: true,
-          meesage: 'new user added',
-        })
+      await User.create(info).then(async (user) => {
+        await cloudinary.uploader
+          .upload(path)
+          .then((result) => {
+            User.update(
+              { image: result.secure_url, cloudinary_id: result.public_id },
+              { where: { id: user.id } }
+            )
+              .then((response) => {
+                console.log(response)
+                if (response != 0) {
+                  res.status(200).json({
+                    status: true,
+                    meesage: 'new user added',
+                  })
+                } else {
+                  res.status(200).json({
+                    status: false,
+                    meesage: 'Cloudinary error',
+                  })
+                }
+              })
+              .catch((err) => {
+                res.status(200).json({
+                  status: false,
+                  meesage: 'Error',
+                })
+              })
+          })
+          .catch((err) => {
+            res.status(500).send(err)
+          })
       })
     } else {
       res.status(200).json({
@@ -124,6 +151,41 @@ const register = async (req, res) => {
     }
   })
 }
+
+//delete profile picture
+const deleteProfilePicture = async (req, res) => {
+  let id = req.body.id
+  let path = null
+  await User.findOne({ where: { id: id } })
+    .then((user) => {
+      cloudinary.uploader
+        .destroy(user.dataValues.cloudinary_id)
+        .then((response) => {
+          if (response.result == 'ok') {
+            User.update(
+              { image: null, cloudinary_id: null },
+              { where: { id: id } }
+            )
+              .then(() => {
+                console.log('deleted')
+                res.status(200).send('Success')
+              })
+              .catch((err) => {
+                console.log('deleted')
+                res.status(200).send(err)
+              })
+          } else {
+            res.status(200).send('Failed')
+          }
+        })
+        .catch((err) => {
+          res.status(500).send('nothing to delete')
+        })
+    })
+    .catch((err) => {
+      res.status(500).send('err')
+    })
+}
 module.exports = {
   getAllUser,
   getUserById,
@@ -131,4 +193,5 @@ module.exports = {
   deleteUserById,
   login,
   register,
+  deleteProfilePicture,
 }

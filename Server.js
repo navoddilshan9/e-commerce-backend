@@ -1,10 +1,9 @@
 const express = require('express')
 const cors = require('cors')
 const { urlencoded } = require('express')
-
 const app = express()
 let port = process.env.PORT || 8000
-
+require('dotenv').config()
 //=================================================================
 //                         Middllwares
 //=================================================================

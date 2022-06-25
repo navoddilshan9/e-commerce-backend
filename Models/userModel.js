@@ -50,6 +50,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    image: {
+      type: DataTypes.STRING,
+    },
+    cloudinary_id: {
+      type: DataTypes.STRING,
+    },
   })
   return User
 }
