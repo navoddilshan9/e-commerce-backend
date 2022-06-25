@@ -1,20 +1,24 @@
-const Sequelize = require('sequelize')
-const sequelize = require('../database')
-
-const SellerBankAccount = sequelize.define('sellerBankAccount', {
-  AccountNo: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    primaryKey: true,
-  },
-  BankName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  BranchName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-})
-
-module.exports = SellerBankAccount
+module.exports = (sequelize, DataTypes) => {
+  const SellerBankAccount = sequelize.define('sellerBankAccount', {
+    dId: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      allowNull: false,
+    },
+    accountNo: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      primaryKey: true,
+    },
+    bankName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    branchName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  })
+  return SellerBankAccount
+}

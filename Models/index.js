@@ -33,6 +33,7 @@ db.products = require('./productModel')(sequelize, DataTypes)
 db.payments = require('./paymentModel.js')(sequelize, DataTypes)
 db.carts = require('./cartModel')(sequelize, DataTypes)
 db.catergories = require('./categoryModel')(sequelize, DataTypes)
+db.bankDetails = require('./sellerBankAccountModel')(sequelize, DataTypes)
 //=================================================================
 //                     Associations
 //=================================================================
@@ -43,6 +44,10 @@ db.users.hasOne(db.stores, {
 })
 db.stores.belongsTo(db.users)
 
+db.users.hasOne(db.bankDetails, {
+  onDelete: 'cascade',
+})
+db.bankDetails.belongsTo(db.users)
 //one-to-many
 db.stores.hasMany(db.products, {
   onDelete: 'cascade',

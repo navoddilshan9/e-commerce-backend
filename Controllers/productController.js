@@ -53,4 +53,32 @@ const getProductByStore = async (req, res) => {
       res.status(400).send(err)
     })
 }
-module.exports = { add, getAllProducts, getProductById, getProductByStore }
+
+//Get store by ID
+const deleteProduct = async (req, res) => {
+  let id = req.params.id
+  await Product.destroy({ where: { productId: id } })
+    .then((status) => {
+      if (status != 0) {
+        res.status(200).json({
+          status: true,
+          message: 'success',
+        })
+      } else {
+        res.status(200).json({
+          status: false,
+          message: 'Invalid product id',
+        })
+      }
+    })
+    .catch((err) => {
+      res.status(500).send(err)
+    })
+}
+module.exports = {
+  add,
+  getAllProducts,
+  getProductById,
+  getProductByStore,
+  deleteProduct,
+}

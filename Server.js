@@ -29,6 +29,7 @@ const catergoryRoutes = require('./Routes/catergoryRoutes')
 const productRouter = require('./Routes/productRouter')
 const paymentRouter = require('./Routes/paymentRouter')
 const cartRouter = require('./Routes/cartRouter')
+const sellerBankAccountRoutes = require('./Routes/sellerBankAccountRoutes')
 
 app.use('/api/v1/user', userRouter)
 app.use('/api/v1/store', storeRoutes)
@@ -36,6 +37,7 @@ app.use('/api/v1/catergory', catergoryRoutes)
 app.use('/api/v1/product', productRouter)
 app.use('/api/v1/payment', paymentRouter)
 app.use('/api/v1/cart', cartRouter)
+app.use('/api/v1/bankdetails', sellerBankAccountRoutes)
 
 //=================================================================
 //                         Server
