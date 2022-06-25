@@ -68,7 +68,7 @@ const updateStoreById = async (req, res) => {
       } else {
         res.status(200).json({
           status: false,
-          message: 'Cant find ther store',
+          message: 'Cant find the store',
         })
       }
     })
