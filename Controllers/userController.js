@@ -152,7 +152,7 @@ const login = async (req, res) => {
 
 //delete profile picture
 const deleteProfilePicture = async (req, res) => {
-  let id = req.body.id
+  let id = req.params.id
   let path = null
   await User.findOne({ where: { id: id } })
     .then((user) => {
@@ -181,7 +181,7 @@ const deleteProfilePicture = async (req, res) => {
         })
     })
     .catch((err) => {
-      res.status(500).send('err')
+      res.status(500).send('error')
     })
 }
 module.exports = {

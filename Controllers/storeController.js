@@ -1,13 +1,13 @@
 const db = require('../models')
 const Store = db.stores
 const Catergory = db.catergories
-
+const cloudinary = require('../Middlewares/cloudinary')
 //  register store
 const register = async (req, res) => {
+  const path = req.file.path
   let info = {
     name: req.body.name,
     description: req.body.description,
-    picture: 'path',
     userId: req.body.userId,
   }
   const catergoryId = req.body.catergoryId
@@ -18,10 +18,41 @@ const register = async (req, res) => {
   await Store.create(info).then((store) => {
     store
       .addCategories(catergoryInfo)
-      .then((data) => {
-        res.status(200).send(data)
+      .then(async (store) => {
+        await cloudinary.uploader
+          .upload(path)
+          .then(async (result) => {
+            await Store.update(
+              { image: result.secure_url, cloudinary_id: result.public_id },
+              { where: { storeId: store[0]?.dataValues?.storeStoreId } }
+            )
+              .then((response) => {
+                if (response != 0) {
+                  res.status(200).json({
+                    status: true,
+                    meesage: 'new user added',
+                  })
+                } else {
+                  res.status(200).json({
+                    status: false,
+                    meesage: 'Cloudinary error',
+                  })
+                }
+              })
+              .catch((err) => {
+                res.status(200).json({
+                  status: false,
+                  meesage: 'Error',
+                })
+              })
+          })
+          .catch((err) => {
+            // console.log('response')
+            res.status(500).send(err)
+          })
       })
       .catch((err) => {
+        console.log('response')
         res.status(200).send(err)
       })
   })
@@ -107,6 +138,40 @@ const deleteStoreById = async (req, res) => {
       res.status(500).send(err)
     })
 }
+//delete store picture
+const deleteStorePicture = async (req, res) => {
+  let id = req.params.id
+  let path = null
+  await Store.findOne({ where: { storeId: id } })
+    .then((store) => {
+      cloudinary.uploader
+        .destroy(store.dataValues.cloudinary_id)
+        .then((response) => {
+          if (response.result == 'ok') {
+            Store.update(
+              { image: null, cloudinary_id: null },
+              { where: { storeId: id } }
+            )
+              .then(() => {
+                console.log('deleted')
+                res.status(200).send('Success')
+              })
+              .catch((err) => {
+                console.log('deleted')
+                res.status(200).send(err)
+              })
+          } else {
+            res.status(200).send('Failed')
+          }
+        })
+        .catch((err) => {
+          res.status(500).send('nothing to delete')
+        })
+    })
+    .catch((err) => {
+      res.status(500).send('err')
+    })
+}
 module.exports = {
   register,
   getAllStores,
@@ -114,4 +179,5 @@ module.exports = {
   updateStoreById,
   deleteStoreById,
   getAllStoresByUserId,
+  deleteStorePicture,
 }

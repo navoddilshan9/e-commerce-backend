@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       allowNull: false,
     },
-    pName: {
+    productName: {
       type: DataTypes.STRING,
       allowNull: false,
     },

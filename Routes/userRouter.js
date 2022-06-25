@@ -8,5 +8,5 @@ router.get('/getAllUsers', userController.getAllUser)
 router.get('/getUserById/:id', userController.getUserById)
 router.put('/updateUserById/:id', userController.updateUserById)
 router.delete('/deleteUserById/:id', userController.deleteUserById)
-router.post('/deleteProfilePicture', userController.deleteProfilePicture)
+router.delete('/deleteProfilePicture/:id', userController.deleteProfilePicture)
 module.exports = router
