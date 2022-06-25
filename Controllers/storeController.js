@@ -30,7 +30,7 @@ const register = async (req, res) => {
                 if (response != 0) {
                   res.status(200).json({
                     status: true,
-                    meesage: 'new user added',
+                    meesage: 'new store added',
                   })
                 } else {
                   res.status(200).json({

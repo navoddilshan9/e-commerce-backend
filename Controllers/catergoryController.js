@@ -1,6 +1,6 @@
 const db = require('../models')
 const Catergory = db.catergories
-const Store = db.storess
+const Store = db.stores
 const cloudinary = require('../Middlewares/cloudinary')
 
 const add = async (req, res) => {
