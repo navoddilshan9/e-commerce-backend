@@ -44,7 +44,7 @@ const getUserBankDetails = async (req, res) => {
 }
 const deleteBankDetailsById = async (req, res) => {
   let id = req.params.id
-  await BankDetails.destroy({ where: { dId: id } })
+  await BankDetails.destroy({ where: { detailsId: id } })
     .then((status) => {
       if (status != 0) {
         res.status(200).json({
@@ -62,9 +62,31 @@ const deleteBankDetailsById = async (req, res) => {
       res.status(500).send(err)
     })
 }
+//  update bank detials  by ID
+const updateBankDetailsById = async (req, res) => {
+  let id = req.params.id
+  await BankDetails.update(req.body, { where: { detailsId: id } })
+    .then((store) => {
+      if (store == 1) {
+        res.status(200).json({
+          status: true,
+          message: 'Updated bank details',
+        })
+      } else {
+        res.status(200).json({
+          status: false,
+          message: 'Cant find the this bank details',
+        })
+      }
+    })
+    .catch((err) => {
+      res.status(400).send(err)
+    })
+}
 module.exports = {
   add,
   getAllBankDetails,
   getUserBankDetails,
   deleteBankDetailsById,
+  updateBankDetailsById,
 }

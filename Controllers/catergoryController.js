@@ -1,5 +1,6 @@
 const db = require('../models')
 const Catergory = db.catergories
+const Store = db.stores
 const add = async (req, res) => {
   let info = {
     catergoryName: req.body.catergoryName,
@@ -65,11 +66,28 @@ const updateCatergoryById = async (req, res) => {
       res.status(400).send(err)
     })
 }
-//Get store by ID
+//Get Catergory by ID
 const getCatergoryById = async (req, res) => {
   let id = req.params.id
   await Catergory.findOne({
     where: { categoryID: id },
+  })
+    .then((stores) => {
+      res.status(200).send(stores)
+    })
+    .catch((err) => {
+      res.status(400).send(err)
+    })
+}
+const getStoresbyCatergoryId = async (req, res) => {
+  let id = req.params.id
+  await Catergory.findAll({
+    where: { categoryID: id },
+    include: [
+      {
+        model: Store,
+      },
+    ],
   })
     .then((stores) => {
       res.status(200).send(stores)
@@ -84,4 +102,5 @@ module.exports = {
   deleteCatergoryById,
   updateCatergoryById,
   getCatergoryById,
+  getStoresbyCatergoryId,
 }

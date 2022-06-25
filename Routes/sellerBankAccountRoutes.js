@@ -12,4 +12,8 @@ router.delete(
   '/deleteBankDetailsById/:id',
   sellerBankAccountController.deleteBankDetailsById
 )
+router.put(
+  '/updateBankDetailsById/:id',
+  sellerBankAccountController.updateBankDetailsById
+)
 module.exports = router

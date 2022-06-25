@@ -1,5 +1,6 @@
 const db = require('../models')
 const Store = db.stores
+const Catergory = db.catergories
 
 //  register store
 const register = async (req, res) => {
@@ -9,13 +10,21 @@ const register = async (req, res) => {
     picture: 'path',
     userId: req.body.userId,
   }
-  Store.create(info)
-    .then((store) => {
-      res.status(200).send(store)
-    })
-    .catch((err) => {
-      res.status(200).send(err)
-    })
+  const catergoryId = req.body.catergoryId
+
+  let catergoryInfo = await Catergory.findOne({
+    where: { categoryID: catergoryId },
+  })
+  await Store.create(info).then((store) => {
+    store
+      .addCategories(catergoryInfo)
+      .then((data) => {
+        res.status(200).send(data)
+      })
+      .catch((err) => {
+        res.status(200).send(err)
+      })
+  })
 }
 
 // Get all store

@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Store = sequelize.define('store', {
-    dId: {
+    storeId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       allowNull: false,
