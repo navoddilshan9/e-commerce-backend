@@ -34,6 +34,7 @@ db.payments = require('./paymentModel.js')(sequelize, DataTypes)
 db.carts = require('./cartModel')(sequelize, DataTypes)
 db.catergories = require('./categoryModel')(sequelize, DataTypes)
 db.bankDetails = require('./sellerBankAccountModel')(sequelize, DataTypes)
+
 //=================================================================
 //                     Associations
 //=================================================================
@@ -63,7 +64,14 @@ db.catergories.belongsToMany(db.stores, {
   through: 'Store_Catergory',
   onDelete: 'cascade',
 })
-
+db.carts.belongsToMany(db.products, {
+  through: 'Cart_Product',
+  onDelete: 'cascade',
+})
+db.products.belongsToMany(db.carts, {
+  through: 'Cart_Product',
+  onDelete: 'cascade',
+})
 //=================================================================
 //     If you want to drop all tables,change the force as true
 //=================================================================
